@@ -12,7 +12,7 @@ class TestJSONGrep(TestCase):
         """
         json_grep = JSONGrep(['user'])
         source = {'userID': 5, 'url' : 'http://www.google.com'}
-        result = json_grep.jgrep(source)
+        result = json_grep.jgrep(encode(source))
         self.assertEquals(result, {'userID': 5}) 
         
         

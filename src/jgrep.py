@@ -1,8 +1,6 @@
-#!/usr/bin/env python
 from __future__ import with_statement
 import sys
 import re
-from optparse import OptionParser
 from cjson import decode, encode
 
 # ---------------------------------------
@@ -33,8 +31,7 @@ class JSONGrep(object):
         with open(filename) as f:
             for line in f:
                 try:
-                    line_dec = decode(line)
-                    fline = self.jgrep(line_dec)
+                    fline = self.jgrep(line)
                     if fline:
                         filtered_lines.append(encode(fline))
                 except:
@@ -42,16 +39,18 @@ class JSONGrep(object):
                 
         return filtered_lines
     
-    def jgrep(self, source):
+    def jgrep(self, source_str):
         """
         Filters the keys of a source dictionary by the set of regexes
         
         :Parameters:
-            source : dict
-                The source dictionary
+            source_str : src
+                The json string
         :rtype: dict
         :returns: A dictonary of filtered keys
         """
+        source = decode(source_str)
+        
         key_str = ' '.join(['%s ' % k for k in source.keys()])
         fline = {}
         for regex in self.key_regex:
@@ -60,28 +59,3 @@ class JSONGrep(object):
                 key = match.group().strip()
                 fline[key] = source[key]
         return fline
-
-# -----------------------------------
-# Main
-# -----------------------------------
-def parse_args():
-   parser = OptionParser()
-   parser.add_option('-k', '--key' , dest='keys', action='append',
-                     help='List of JSON keys to output, arg for each key')
-
-   options, args = parser.parse_args()
-   if len(args) != 1:
-       parser.error('Must specify a file.')
-       sys.exit()
-
-   if not options.keys:
-       parser.error('Must specify at least one key regex')
-       sys.exit()
-
-   return options, args
-
-if __name__ == '__main__':
-   options, args = parse_args()
-   json_grep = JSONGrep(options.keys)
-   lines = json_grep.jgrep_file(args[0])
-   print '\n'.join(lines)
