@@ -3,7 +3,7 @@
 import sys
 from optparse import OptionParser
 
-from jgrep import JSONGrep
+from json_grep import JSONGrep
 
 # -----------------------------------
 # Main

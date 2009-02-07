@@ -4,6 +4,6 @@ setup(name = 'jgrep',
       description ='A class for filtering json strings',
       author ='John Novatnack',
       author_email ='jnovatnack@gmail.com',
-      packages = ['src/'],
+      packages = ['json_grep'],
       scripts = ['jgrep'])
       

@@ -1,6 +1,6 @@
 from unittest import TestCase
 from cjson import encode, decode
-from jgrep import JSONGrep
+from json_grep import JSONGrep
 
 class TestJSONGrep(TestCase):
     """
