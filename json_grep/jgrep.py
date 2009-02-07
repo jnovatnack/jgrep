@@ -11,7 +11,7 @@ class JSONGrep(object):
     """
     A class for filtering JSON keys by a number of regexes
     """
-    def __init__(self, keys):
+    def __init__(self, keys, tab_delimited=False):
         """
         :Parameters:
             keys : list(str)
@@ -38,7 +38,6 @@ class JSONGrep(object):
                         filtered_lines.append(encode(fline))
                 except:
                     pass
-                    #raise
                 
         return filtered_lines
     
