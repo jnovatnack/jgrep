@@ -1,6 +1,7 @@
 from __future__ import with_statement
 import sys
 import re
+from optparse import OptionParser
 from cjson import decode, encode
 
 # ---------------------------------------
@@ -16,7 +17,7 @@ class JSONGrep(object):
             keys : list(str)
                 A list of regular expressions
         """
-        self.key_regex = [re.compile('%s\w*\s' % key) for key in keys]
+        self.key_regex = [re.compile('%s' % key) for key in keys]
 
     def jgrep_file(self, filename):
         """
@@ -31,11 +32,13 @@ class JSONGrep(object):
         with open(filename) as f:
             for line in f:
                 try:
+                    line = line.strip()
                     fline = self.jgrep(line)
                     if fline:
                         filtered_lines.append(encode(fline))
                 except:
                     pass
+                    #raise
                 
         return filtered_lines
     
@@ -50,12 +53,13 @@ class JSONGrep(object):
         :returns: A dictonary of filtered keys
         """
         source = decode(source_str)
-        
-        key_str = ' '.join(['%s ' % k for k in source.keys()])
+
+        keys = source.keys()
         fline = {}
         for regex in self.key_regex:
-            match = regex.search(key_str)
-            if match is not None:
-                key = match.group().strip()
-                fline[key] = source[key]
+            for key in keys:
+                match = regex.search(key)
+                if match is not None:
+                    fline[key] = source[key]
+
         return fline
