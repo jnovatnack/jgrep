@@ -4,5 +4,8 @@ jnovatnack@gmail.com
 
 JGrep is a simple command line utility for filtering the JSON objects on each line of a file. 
 
+Requirements:
+cjson
+
 Example:	
 jgrep logs.txt -k ^ip -k user
