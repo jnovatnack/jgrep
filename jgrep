@@ -27,5 +27,6 @@ def parse_args():
 if __name__ == '__main__':
    options, args = parse_args()
    json_grep = JSONGrep(options.keys)
-   lines = json_grep.jgrep_file(args[0])
-   print '\n'.join(lines)
+   
+   for line in json_grep.jgrep_file(args[0]):
+       print '%s' % line

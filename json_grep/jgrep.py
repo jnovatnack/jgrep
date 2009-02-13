@@ -28,18 +28,15 @@ class JSONGrep(object):
         :rtype: list(str)
         :returns: A list of encoded and filtered JSON objects 
         """
-        filtered_lines = []
         with open(filename) as f:
             for line in f:
                 try:
                     line = line.strip()
                     fline = self.jgrep(line)
                     if fline:
-                        filtered_lines.append(encode(fline))
+                        yield fline
                 except:
                     pass
-                
-        return filtered_lines
     
     def jgrep(self, source_str):
         """
