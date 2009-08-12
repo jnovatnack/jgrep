@@ -1,8 +1,11 @@
-from __future__ import with_statement
 import sys
 import re
+import logging
+
 from optparse import OptionParser
 from cjson import decode, encode
+
+log = logging.getLogger('jgrep')
 
 # ---------------------------------------
 # JSONGrep implementation
@@ -19,24 +22,24 @@ class JSONGrep(object):
         """
         self.key_regex = [re.compile('%s' % key) for key in keys]
 
-    def jgrep_file(self, filename):
+    def jgrep_file(self, fd):
         """
         Greps the JSON dictionaries on each line of a file
 
         :Parameters: 
-            filename : str
+            fd : File 
         :rtype: list(str)
         :returns: A list of encoded and filtered JSON objects 
         """
-        with open(filename) as f:
-            for line in f:
-                try:
-                    line = line.strip()
-                    fline = self.jgrep(line)
-                    if fline:
-                        yield fline
-                except:
-                    pass
+        for line in fd:
+            try:
+                line = line.strip()
+                fline = self.jgrep(line)
+                if fline:
+                    yield fline
+            except:
+                log.exception('Exception reading line %s' % line)
+                raise
     
     def jgrep(self, source_str):
         """

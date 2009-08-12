@@ -1,5 +1,5 @@
 import os
-from tempfile import mkstemp
+from tempfile import TemporaryFile
 from unittest import TestCase
 
 from cjson import encode, decode
@@ -22,18 +22,18 @@ class TestJSONGrep(TestCase):
         """
         Ensures we can jgrep a file
         """
-        fid, fname = mkstemp()
-        tmp_file = open(fname, 'w')
+        tmp_file = TemporaryFile('w+')
         tmp_file.write('%s\n' % encode({'user' : 'john', 'ip' : '192.168.2.2', 'city' : 'philadelphia'}))
         tmp_file.write('%s\n' % encode({'user' : 'jill', 'ip' : '10.0.0.1', 'city' : 'stockholm'}))
-        tmp_file.close()
+        tmp_file.seek(0)
+
         
         expected_output = [
             {'user' : 'john', 'ip' : '192.168.2.2'},
             {'user' : 'jill', 'ip' : '10.0.0.1'}]
 
         json_grep = JSONGrep(['user', 'ip'])
-        output = [line for line in json_grep.jgrep_file(fname)]
+        output = [line for line in json_grep.jgrep_file(tmp_file)]
         self.assertEquals(expected_output, output)
          
         
