@@ -1,9 +1,9 @@
-import sys
-import re
+import json
 import logging
+import re
+import sys
 
 from optparse import OptionParser
-from cjson import decode, encode
 
 log = logging.getLogger('jgrep')
 
@@ -36,7 +36,7 @@ class JSONGrep(object):
                 line = line.strip()
                 fline = self.jgrep(line)
                 if fline:
-                    yield fline
+                    yield json.dumps(fline)
             except:
                 log.exception('Exception reading line %s' % line)
                 raise
@@ -51,7 +51,7 @@ class JSONGrep(object):
         :rtype: dict
         :returns: A dictonary of filtered keys
         """
-        source = decode(source_str)
+        source = json.loads(source_str)
 
         keys = source.keys()
         fline = {}
@@ -60,5 +60,4 @@ class JSONGrep(object):
                 match = regex.search(key)
                 if match is not None:
                     fline[key] = source[key]
-
         return fline
